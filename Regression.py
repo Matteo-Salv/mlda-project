@@ -47,6 +47,7 @@ class Regression:
         TODO:
         1. funzione KRLS
         2. selezione degli iperparametri dove richiesto tramite k-fold
+        3. Scatter plot
         """
 
 
