@@ -39,3 +39,6 @@ if __name__ == "__main__":
 
     # support vector regression
     objReg.supportVectorRegression()
+    
+    #kernel ridge regression
+    objReg.KRLS()
