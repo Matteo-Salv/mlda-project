@@ -1,7 +1,8 @@
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
-from sklearn import metrics
+from sklearn.kernel_ridge import KernelRidge
+from sklearn import preprocessing
 from sklearn.svm import SVR
 from sklearn.linear_model  import Ridge
 import numpy as np
@@ -15,30 +16,21 @@ class Regression:
         x = dataset.drop(['charges'], axis=1)
         y = dataset.charges
         self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(x, y, random_state=0)
+        scalerX = preprocessing.MinMaxScaler()
+        self.x_train = scalerX.fit_transform(self.x_train)
+        self.x_test = scalerX.transform(self.x_test)
 
     def linearRegression(self):
         lr = LinearRegression().fit(self.x_train, self.y_train)
-        y_train_pred = lr.predict(self.x_train)
         y_test_pred = lr.predict(self.x_test)
-        print(lr.score(self.x_test, self.y_test))
         print("### RESULTS FOR LINEAR REGRESSION ###")
-        print('MSE train data: %.3f, MSE test data: %.3f' %
-              (metrics.mean_squared_error(y_train_pred, self.y_train),
-               metrics.mean_squared_error(y_test_pred, self.y_test)))
-        # plt.style.use('seaborn')
-        # plt.scatter(y_train_pred, y_test_pred, color='red', marker='o', s=35, alpha=0.5,
-        #             label='Test data')
-        # plt.plot(y_train_pred, y_train_pred, color='blue', label='Model Plot')
-        # plt.title('Predicted Values vs Inputs')
-        # plt.xlabel('Inputs')
-        # plt.ylabel('Predicted Values')
-        # plt.legend(loc='upper left')
-        # plt.show()
-
-        plt.scatter(y_train_pred, self.y_train)
+        print('Accuracy: ' + str(lr.score(self.x_test, self.y_test)))
+        err = np.mean(np.abs(self.y_test - y_test_pred))  # np = numpy
+        print("Model MAE: ", err)
         plt.title('Linear Regression')
-        tmp = [min(np.concatenate((y_train_pred, y_test_pred))),
-               max(np.concatenate((y_train_pred, y_test_pred)))]
+        plt.scatter(self.y_test, y_test_pred)
+        tmp = [min(np.concatenate((self.y_test, y_test_pred))),
+               max(np.concatenate((self.y_test, y_test_pred)))]
         plt.plot(tmp, tmp, 'r')
         plt.xlabel('Predicted Value')
         plt.ylabel('Actual Value')
@@ -47,61 +39,76 @@ class Regression:
 
 
     def randomForest(self):
-        rfr = RandomForestRegressor(n_estimators=100, criterion='mse', random_state=1, n_jobs=-1)
+        rfr = RandomForestRegressor(n_estimators=100, max_features='auto')
         rfr.fit(self.x_train, self.y_train)
-        y_train_pred = rfr.predict(self.x_train)
         y_test_pred = rfr.predict(self.x_test)
         print("### RESULTS FOR RANDOM FOREST REGRESSION ###")
-        print('MSE train data: %.3f, MSE test data: %.3f' %
-              (metrics.mean_squared_error(y_train_pred, self.y_train),
-               metrics.mean_squared_error(y_test_pred, self.y_test)))
+        print('Accuracy: ' + str(rfr.score(self.x_test, self.y_test)))
+        err = np.mean(np.abs(self.y_test - y_test_pred))
+        print("Model MAE: ", err)
         plt.figure(figsize=(8, 6))
         plt.title('Random Forest')
-        plt.scatter(y_train_pred, y_train_pred - self.y_train,
-                    c='gray', marker='o', s=35, alpha=0.5,
-                    label='Train data')
-        plt.scatter(y_test_pred, y_test_pred - self.y_test,
-                    c='blue', marker='o', s=35, alpha=0.7,
-                    label='Test data')
-        plt.xlabel('Predicted values')
-        plt.ylabel('Actual values')
-        plt.legend(loc='upper right')
-        plt.hlines(y=0, xmin=0, xmax=60000, lw=2, color='red')
-        plt.show()
-
-
-    def supportVectorRegression(self):
-        svr = SVR(kernel='rbf')
-        svr.fit(self.x_train, self.y_train)
-        y_train_pred = svr.predict(self.x_train)
-        y_test_pred = svr.predict(self.x_test)
-        print("### RESULTS FOR SUPPORT VECTOR REGRESSION ###")
-        print('MSE train data: %.3f, MSE test data: %.3f' %
-              (metrics.mean_squared_error(y_train_pred, self.y_train),
-               metrics.mean_squared_error(y_test_pred, self.y_test)))
-        plt.title('SVR')
-        plt.scatter(y_train_pred, self.y_train)
-        tmp = [min(np.concatenate((y_train_pred, y_test_pred))),
-               max(np.concatenate((y_train_pred, y_test_pred)))]
+        plt.scatter(self.y_test, y_test_pred)
+        tmp = [min(np.concatenate((self.y_test, y_test_pred))),
+               max(np.concatenate((self.y_test, y_test_pred)))]
         plt.plot(tmp, tmp, 'r')
         plt.xlabel('Predicted Value')
         plt.ylabel('Actual Value')
         plt.show()
 
 
+    def supportVectorRegression(self):
+
+        grid = {'C': np.logspace(-4, 3, 10),'kernel': ['rbf'],'gamma': np.logspace(-2, 2, 10), 'epsilon': [0, 0.1]}
+
+        CV = GridSearchCV(estimator=SVR(),param_grid=grid,scoring='neg_mean_absolute_error',cv=10, verbose=0)
+
+        H = CV.fit(self.x_train, self.y_train)
+
+        svr = SVR(C = H.best_params_['C'],kernel='rbf' , gamma= H.best_params_['gamma'], epsilon=H.best_params_['epsilon'])
+
+        svr.fit(self.x_train, self.y_train)
+        y_test_pred = svr.predict(self.x_test)
+        print("### RESULTS FOR SUPPORT VECTOR REGRESSION ###")
+        print('Selected hyperparameters: ')
+        print('C = %.3f, gamma = %.3f' % ((H.best_params_['C'])), ((H.best_params_['gamma'])))
+        print('Accuracy: ' + str(svr.score(self.x_test, self.y_test)))
+        err = np.mean(np.abs(self.y_test - y_test_pred))
+        print("Model MAE: ", err)
+        plt.title('SVR')
+        plt.scatter(self.y_test, y_test_pred)
+        tmp = [min(np.concatenate((self.y_test, y_test_pred))),
+               max(np.concatenate((self.y_test, y_test_pred)))]
+        plt.plot(tmp, tmp, 'r')
+        plt.xlabel('Predicted Value')
+        plt.ylabel('Actual Value')
+        plt.show()
+
+
+
+
     def KRLS(self):
-        ridge = Ridge(alpha=0.5)
+
+        grid = {'alpha': np.logspace(-4, 3, 10), 'kernel': ['rbf'], 'gamma': np.logspace(-4, 3, 10)}
+
+        CV = GridSearchCV(estimator=KernelRidge(), param_grid=grid, scoring='neg_mean_absolute_error', cv=10, verbose=0)
+
+        H = CV.fit(self.x_train, self.y_train)
+
+        ridge = KernelRidge(alpha = H.best_params_['alpha'], kernel='rbf', gamma = H.best_params_['gamma'])
+
         ridge.fit(self.x_train, self.y_train)
-        y_train_pred = ridge.predict(self.x_train)
         y_test_pred = ridge.predict(self.x_test)
         print("### RESULTS FOR KRLS ###")
-        print('MSE train data: %.3f, MSE test data: %.3f' %
-              (metrics.mean_squared_error(y_train_pred, self.y_train),
-               metrics.mean_squared_error(y_test_pred, self.y_test)))
+        print('Selected hyperparameters: ')
+        print('alpha = %.3f, gamma = %.3f' % ((H.best_params_['alpha'])), ((H.best_params_['gamma'])))
+        print('Accuracy: ' + str(ridge.score(self.x_test, self.y_test)))
+        err = np.mean(np.abs(self.y_test - y_test_pred))
+        print("Model MAE: ", err)
         plt.title('KRLS')
-        plt.scatter(y_train_pred, self.y_train)
-        tmp = [min(np.concatenate((y_train_pred, y_test_pred))),
-               max(np.concatenate((y_train_pred, y_test_pred)))]
+        plt.scatter(self.y_test, y_test_pred)
+        tmp = [min(np.concatenate((self.y_test, y_test_pred))),
+               max(np.concatenate((self.y_test, y_test_pred)))]
         plt.plot(tmp, tmp, 'r')
         plt.xlabel('Predicted Value')
         plt.ylabel('Actual Value')
@@ -109,12 +116,8 @@ class Regression:
 
         """
         TODO:
-        2. selezione degli iperparametri dove richiesto tramite k-fold
-        3. Scatter plot
-        4. possibilità di regressione solo per determinate categorie (fumatori non fumatori, obesi...)
+        1. possibilità di regressione solo per determinate categorie (fumatori non fumatori, obesi...)
         """
-
-
 
 
 
