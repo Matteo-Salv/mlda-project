@@ -111,6 +111,7 @@ class Regression:
         TODO:
         2. selezione degli iperparametri dove richiesto tramite k-fold
         3. Scatter plot
+        4. possibilità di regressione solo per determinate categorie (fumatori non fumatori, obesi...)
         """
 
 
