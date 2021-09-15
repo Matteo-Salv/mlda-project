@@ -18,11 +18,11 @@ class DataAnalysis:
         # smokers
         ax = f.add_subplot(121)
         sns.histplot(dataset[(dataset.smoker == "yes")]["charges"], color='c', ax=ax)
-        ax.set_title('Distribution of charges for a total of ' + str(nSmokers[1]) + ' smokers')
+        ax.set_title('Distribution of charges over a total of ' + str(nSmokers[1]) + ' smokers')
         # non smokers
         ax = f.add_subplot(122)
         sns.histplot(dataset[(dataset.smoker == "no")]['charges'], color='b', ax=ax)
-        ax.set_title('Distribution of charges for a total of ' + str(nSmokers[0]) + ' non-smokers')
+        ax.set_title('Distribution of charges over a total of ' + str(nSmokers[0]) + ' non-smokers')
         plt.show()
 
         # numero di fumatori e non fumatori tra uomini e donne

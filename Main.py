@@ -13,7 +13,7 @@ if __name__ == "__main__":
     # print(len(dataset.columns))       n colonne
 
     # various plot
-    # plot.dataPlot(dataset)
+    plot.dataPlot(dataset)
 
     # codifico tutte le colonne che sono oggetti anzichè numeri
     le = LabelEncoder()
@@ -25,6 +25,29 @@ if __name__ == "__main__":
     # region
     le.fit(dataset.region.drop_duplicates())
     dataset.region = le.transform(dataset.region)
+
+    while True:
+        print("do you want to subsample the dataset in order to analyze only particular categories "
+              "(i.e. only smokers or BMI > 30)? [y/n]")
+        sel = input()
+        if sel == 'y':
+            print("in which categories are you interested? Smoker [s], non smoker [o], bmi > 30 [b], bmi <= 30 [i]")
+            sel = input()
+            if sel == 's':
+                dataset = dataset[dataset["smoker"] == 1]
+            elif sel == 'o':
+                dataset = dataset[dataset["smoker"] == 0]
+            elif sel == 'b':
+                dataset = dataset[dataset["bmi"] > 30]
+            elif sel == 'i':
+                dataset = dataset[dataset["bmi"] <= 30]
+            else:
+                continue
+            break
+        elif sel == 'n':
+            break
+
+    print(dataset.head())  # primi 5 elementi
 
     objReg = reg(dataset)
 
