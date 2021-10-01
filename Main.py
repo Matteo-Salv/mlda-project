@@ -3,6 +3,7 @@ from sklearn.preprocessing import LabelEncoder
 from DataAnalysis import DataAnalysis as dan
 from Regression import Regression as reg
 
+
 def subsetSelection(dataset):
     while True:
         print("do you want to subsample the dataset in order to analyze only particular categories "
@@ -26,9 +27,13 @@ def subsetSelection(dataset):
             break
     return dataset
 
+
 if __name__ == "__main__":
     dataset = pd.read_csv('Dataset/insurance.csv')
     plot = dan()
+
+    # eliminazione delle colonne children e region, che non consideriamo
+    dataset = dataset.drop(["children", "region"], 1)
 
     # print(dataset.head())             # primi 5 elementi
     # print(dataset.info())             # info tipi del dataframe
@@ -45,14 +50,11 @@ if __name__ == "__main__":
     # smoker or not
     le.fit(dataset.smoker.drop_duplicates())
     dataset.smoker = le.transform(dataset.smoker)
-    # region
-    le.fit(dataset.region.drop_duplicates())
-    dataset.region = le.transform(dataset.region)
 
     # selezione del subset
     dataset = subsetSelection(dataset)
 
-    print(dataset.head())  # primi 5 elementi
+    # print(dataset.head())  # primi 5 elementi
 
     objReg = reg(dataset)
 
@@ -67,6 +69,6 @@ if __name__ == "__main__":
 
     # support vector regression
     objReg.supportVectorRegression()
-    
-    #kernel ridge regression
+
+    # kernel ridge regression
     objReg.KRLS()

@@ -83,10 +83,7 @@ class Regression:
         print("Model MAE: ", err)
         self.scatterPlot(y_test_pred, 'KRLS')
 
-        """
-        TODO:
-        1. possibilità di regressione solo per determinate categorie (fumatori non fumatori, obesi...)
-        """
+
 
 
 

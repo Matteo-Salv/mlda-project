@@ -26,7 +26,7 @@ class DataAnalysis:
         plt.show()
 
         # numero di fumatori e non fumatori tra uomini e donne
-        sns.catplot(x="smoker", kind="count",hue = 'sex', palette="pink", data=dataset, order = ["no", "yes"])
+        sns.catplot(x="smoker", kind="count", hue='sex', palette="pink", data=dataset, order=["no", "yes"])
         plt.show()
 
         # distribuzione d'età
