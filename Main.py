@@ -52,7 +52,7 @@ if __name__ == "__main__":
     dataset.smoker = le.transform(dataset.smoker)
 
     # selezione del subset
-    dataset = subsetSelection(dataset)
+    #dataset = subsetSelection(dataset)
 
     # print(dataset.head())  # primi 5 elementi
 

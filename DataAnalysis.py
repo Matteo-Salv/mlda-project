@@ -66,7 +66,7 @@ class DataAnalysis:
         # costo per BMI > 30
         plt.figure(figsize=(12, 5))
         plt.title("Distribution of charges for patients with BMI greater than 30")
-        ax = sns.histplot(dataset[(dataset.bmi >= 30)]['charges'], color='m')
+        ax = sns.histplot(dataset[(dataset.bmi >= 30)]['charges'], color='b')
         plt.show()
 
         # costo per BMI < 30
