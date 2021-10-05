@@ -33,7 +33,7 @@ if __name__ == "__main__":
     plot = dan()
 
     # eliminazione delle colonne children e region, che non consideriamo
-    dataset = dataset.drop(["children", "region"], axis= 1)
+    dataset = dataset.drop(["children", "region"], axis=1)
 
     # print(dataset.head())             # primi 5 elementi
     # print(dataset.info())             # info tipi del dataframe
