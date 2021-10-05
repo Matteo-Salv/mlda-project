@@ -61,7 +61,8 @@ class Regression:
         y_test_pred = svr.predict(self.x_test)
         print("### RESULTS FOR SUPPORT VECTOR REGRESSION ###")
         print('Selected hyperparameters:')
-        print("C = " + str(H.best_params_['C']) + ", gamma = " + str(H.best_params_['gamma']))
+        print("C = " + str(H.best_params_['C']) + ", gamma = " + str(H.best_params_['gamma']) +
+              ", epsilon = " + str(H.best_params_['epsilon']))
         print('Accuracy (R^2) : ' + str(svr.score(self.x_test, self.y_test)))
         err = np.mean(np.abs(self.y_test - y_test_pred))
         print("Model MAE: ", err)
@@ -72,7 +73,7 @@ class Regression:
         grid = {'alpha': np.logspace(-4, 3, 10), 'kernel': ['rbf'], 'gamma': np.logspace(-4, 3, 10)}
         CV = GridSearchCV(estimator=KernelRidge(), param_grid=grid, scoring='neg_mean_absolute_error', cv=10, verbose=0)
         H = CV.fit(self.x_train, self.y_train)
-        krls = KernelRidge(alpha = H.best_params_['alpha'], kernel='rbf', gamma = H.best_params_['gamma'])
+        krls = KernelRidge(alpha=H.best_params_['alpha'], kernel='rbf', gamma=H.best_params_['gamma'])
         krls.fit(self.x_train, self.y_train)
         y_test_pred = krls.predict(self.x_test)
         print("### RESULTS FOR KRLS ###")
