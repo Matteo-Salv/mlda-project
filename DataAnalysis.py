@@ -41,7 +41,7 @@ class DataAnalysis:
         plt.show()
 
         # numero di fumatori e non fumatori tra 64enni
-        sns.catplot(x="smoker", kind="count", hue='sex', palette="rainbow", data=dataset[(dataset.age == 18)])
+        sns.catplot(x="smoker", kind="count", hue='sex', palette="rainbow", data=dataset[(dataset.age == 64)])
         plt.title("The number of smokers and non-smokers (64 years old)")
         plt.show()
 
