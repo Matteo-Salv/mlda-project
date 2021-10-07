@@ -17,9 +17,9 @@ def subsetSelection(dataset):
             elif sel == 'o':
                 dataset = dataset[dataset["smoker"] == 0]
             elif sel == 'b':
-                dataset = dataset[dataset["bmi"] > 30]
+                dataset = dataset[dataset["bmi"] >= 30]
             elif sel == 'i':
-                dataset = dataset[dataset["bmi"] <= 30]
+                dataset = dataset[dataset["bmi"] < 30]
             else:
                 continue
             break
