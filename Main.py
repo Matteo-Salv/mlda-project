@@ -40,8 +40,8 @@ if __name__ == "__main__":
     # print(len(dataset.index))         # n righe
     # print(len(dataset.columns))       n colonne
 
-    # various plot
-    plot.dataPlot(dataset)
+    # analisi dei dati
+    # plot.dataPlot(dataset)
 
     # codifico tutte le colonne che sono oggetti anzichè numeri
     le = LabelEncoder()
@@ -52,7 +52,7 @@ if __name__ == "__main__":
     dataset.smoker = le.transform(dataset.smoker)
 
     # selezione del subset
-    #dataset = subsetSelection(dataset)
+    # dataset = subsetSelection(dataset)
 
     # print(dataset.head())  # primi 5 elementi
 
