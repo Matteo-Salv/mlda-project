@@ -1,7 +1,7 @@
 # progetto per il corso di Machine Learning and Data Analysis
 ## Università di Genova, Facoltà di Computer Engineering, AA 2020-2021.
 
-Questo programma, a partire da un dataset contenente i costi dell'assicurazione sanitaria di un certo campione di
+Questo programma, a partire da un [dataset](https://www.kaggle.com/mirichoi0218/insurance) contenente i costi dell'assicurazione sanitaria di un certo campione di
 popolazione degli Stati Uniti, permette di prevederne l'andamento. Sono stati utilizzati i seguenti algoritmi di Regressione:
 1. Regressione Lineare
 2. Random Forest
