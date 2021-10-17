@@ -11,7 +11,7 @@ popolazione degli Stati Uniti, permette di prevederne l'andamento. Sono stati ut
 per maggiori dettagli implementativi fare riferimento al documento *presentazioneMLDA.pptx*. La classe principale
 è *main.py*.
 
-##Autori
+## Autori
 Matteo Salvatore [@Matteo-Salv](https://github.com/Matteo-Salv)
 
 Davide Varacalli [@DavideV](https://github.com/DavideV-git1)
