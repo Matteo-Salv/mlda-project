@@ -28,6 +28,19 @@ def subsetSelection(dataset):
     return dataset
 
 
+def dropSmokers(dataset):
+    while True:
+        print("do you want to drop smoker's column? [y/n]")
+        sel = input()
+        if sel == 'y':
+            dataset = dataset.drop(["smoker"], axis=1)
+            plot.correlationMatrix(dataset)
+            break
+        elif sel == 'n':
+            break
+    return dataset
+
+
 if __name__ == "__main__":
     dataset = pd.read_csv('Dataset/insurance.csv')
     plot = dan()
@@ -54,12 +67,14 @@ if __name__ == "__main__":
     # selezione del subset
     # dataset = subsetSelection(dataset)
 
-    # print(dataset.head())  # primi 5 elementi
-
     objReg = reg(dataset)
 
     # correlation matrix
     plot.correlationMatrix(dataset)
+
+    # eliminazione della colonna fumatori
+    dataset = dropSmokers(dataset)
+    print(dataset.head())  # primi 5 elementi
 
     # regression
     objReg.linearRegression()
